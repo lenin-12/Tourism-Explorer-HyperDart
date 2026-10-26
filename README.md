@@ -67,10 +67,10 @@ Other commands: `npm test`, `npm run check:categories` (asks Geoapify whether ea
 ## Data sources and libraries
 Geoapify Places (via the backend), Wikipedia REST summaries, Open-Meteo, OpenStreetMap tiles. React, Leaflet, Express, MUI (platform theme), Wrangler.
 
-## AI tools used (edit to be exactly true before submitting)
+## AI tools used
 - Claude: designed and wrote the component, the backend route and the tests.
 - A separate prototype generated with ChatGPT: ideas taken were the category whitelist, tests, and README checklist.
-- What I wrote or changed myself: <fill in>.
+
 
 ## Known limits
 Straight-line distances only. Hours and descriptions appear only when the data has them. Geoapify coverage varies by region, so an empty result may be a data gap.
