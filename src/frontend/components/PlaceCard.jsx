@@ -12,14 +12,24 @@ export default function PlaceCard({ place, inPlan, selected, onToggle, onSelect,
   const [expanded, setExpanded] = useState(false);
   const kindKey = getKindKey(place.kind);
 
-  // Fallback photo resolution chain
-  const photoAsync = useAsync((s) => fetchPlacePhoto(place, s), [place.id]);
-  const photo = photoAsync.data;
-  const isLoadingPhoto = photoAsync.status === 'loading';
+  // Reset imgFailed when place changes
+  useEffect(() => {
+    setImgFailed(false);
+  }, [place.id]);
 
-  // Text summary from Wikipedia if available
-  const wiki = useAsync((s) => fetchWiki(place.wikipedia, s), [place.id], Boolean(place.wikipedia));
-  const text = wiki.data?.text || photo?.description || null;
+  // 1. Fetch Wikipedia description and photo
+  const hasWiki = Boolean(place.wikipedia);
+  const wiki = useAsync((s) => fetchWiki(place.wikipedia, s), [place.id], hasWiki);
+  const wikiData = wiki.data;
+
+  // 2. Fallback photo resolution chain (only if wikipedia has no image)
+  const shouldFetchFallback = !wikiData?.image;
+  const photoAsync = useAsync((s) => fetchPlacePhoto(place, s), [place.id], shouldFetchFallback);
+
+  // Active image and text
+  const image = wikiData?.image || photoAsync.data?.image;
+  const text = wikiData?.text || photoAsync.data?.description || null;
+  const isLoadingPhoto = (hasWiki && wiki.status === 'loading') || (shouldFetchFallback && photoAsync.status === 'loading');
 
   // when its map pin is clicked from outside, bring this card into view
   useEffect(() => {
@@ -46,7 +56,7 @@ export default function PlaceCard({ place, inPlan, selected, onToggle, onSelect,
     setExpanded((prev) => !prev);
   };
 
-  const showImage = Boolean(photo?.image && !imgFailed);
+  const showImage = Boolean(image && !imgFailed);
 
   return (
     <article
@@ -62,7 +72,7 @@ export default function PlaceCard({ place, inPlan, selected, onToggle, onSelect,
         {showImage ? (
           <img
             className="tx-card-img"
-            src={photo.image}
+            src={image}
             alt={place.name}
             loading="lazy"
             onError={() => setImgFailed(true)}

@@ -91,7 +91,7 @@ export default function PlaceMap({ center, places, stops, selectedId, hoveredId,
     if (stops.length) {
       L.polyline(
         [[center.lat, center.lon], ...stops.map((s) => [s.lat, s.lon])],
-        { color: '#17677a', weight: 4, dashArray: '2 8', lineCap: 'round' }
+        { color: '#F05F40', weight: 4, dashArray: '2 8', lineCap: 'round' }
       ).addTo(route.current);
     }
   }, [stops, center.lat, center.lon]);
