@@ -59,3 +59,101 @@ export const fetchWeather = ({ lat, lon }, signal) =>
     current: 'temperature_2m,weather_code',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
   }), signal);
+
+const photoCache = new Map();
+
+function resolveCommonsUrl(commonsTag) {
+  if (!commonsTag) return null;
+  let filename = String(commonsTag).trim();
+  filename = filename.replace(/^(File|Image|Category):/i, '').trim();
+  if (!filename) return null;
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename.replace(/ /g, '_'))}?width=600`;
+}
+
+function matchesPlaceName(title, placeName) {
+  if (!title || !placeName) return false;
+  const cleanTitle = title.replace(/^File:/i, '').replace(/\.[a-z0-9]+$/i, '').toLowerCase();
+  const words = (placeName.toLowerCase().match(/\b[a-z0-9]{4,}\b/gi) || []);
+  if (words.length === 0) {
+    return cleanTitle.includes(placeName.toLowerCase().trim());
+  }
+  return words.some((w) => cleanTitle.includes(w));
+}
+
+async function geosearchCommons(lat, lon, placeName, signal) {
+  try {
+    const q = new URLSearchParams({
+      action: 'query',
+      generator: 'geosearch',
+      ggscoord: `${lat}|${lon}`,
+      ggsradius: '100',
+      ggsnamespace: '6',
+      ggslimit: '10',
+      prop: 'imageinfo',
+      iiprop: 'url',
+      iiurlwidth: '600',
+      format: 'json',
+      origin: '*',
+    });
+    const res = await getJson(`https://commons.wikimedia.org/w/api.php?${q.toString()}`, signal);
+    const pages = Object.values(res?.query?.pages ?? {});
+    for (const page of pages) {
+      if (matchesPlaceName(page.title, placeName)) {
+        const thumb = page.imageinfo?.[0]?.thumburl || page.imageinfo?.[0]?.url;
+        if (thumb) return thumb;
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchPlacePhoto(place, signal) {
+  if (!place?.id) return { image: null, credit: null };
+  if (photoCache.has(place.id)) return photoCache.get(place.id);
+
+  // 1. Existing Wikipedia photo
+  if (place.wikipedia) {
+    try {
+      const wiki = await fetchWiki(place.wikipedia, signal);
+      if (wiki?.image) {
+        const res = { image: wiki.image, credit: null, description: wiki.text };
+        photoCache.set(place.id, res);
+        return res;
+      }
+    } catch {
+      // proceed silently to next fallback
+    }
+  }
+
+  // 2. OSM tags from datasource.raw: image or wikimedia_commons
+  if (place.osmImage) {
+    const res = { image: place.osmImage, credit: null };
+    photoCache.set(place.id, res);
+    return res;
+  }
+  if (place.osmCommons) {
+    const commonsUrl = resolveCommonsUrl(place.osmCommons);
+    if (commonsUrl) {
+      const res = { image: commonsUrl, credit: null };
+      photoCache.set(place.id, res);
+      return res;
+    }
+  }
+
+  // 3. Wikimedia Commons geosearch near place coordinates
+  if (Number.isFinite(place.lat) && Number.isFinite(place.lon)) {
+    const geoThumb = await geosearchCommons(place.lat, place.lon, place.name, signal);
+    if (geoThumb) {
+      const res = { image: geoThumb, credit: null };
+      photoCache.set(place.id, res);
+      return res;
+    }
+  }
+
+  // 4. Coloured icon placeholder fallback
+  const res = { image: null, credit: null };
+  photoCache.set(place.id, res);
+  return res;
+}

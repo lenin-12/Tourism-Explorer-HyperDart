@@ -37,6 +37,8 @@ export function normalizePlaces(features, center) {
       website: safeUrl(p.website || raw.website),
       hours: p.opening_hours || raw.opening_hours || null,
       wikipedia: raw.wikipedia || null, // "en:Eiffel Tower": used to fetch a real description
+      osmImage: safeUrl(raw.image),
+      osmCommons: typeof raw.wikimedia_commons === 'string' && raw.wikimedia_commons.trim() ? raw.wikimedia_commons.trim() : null,
       distanceKm: haversineKm(center, { lat, lon }),
     });
   }

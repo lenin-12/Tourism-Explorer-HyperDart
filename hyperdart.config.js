@@ -43,6 +43,6 @@ export default  {
 	info: {
 		// key-values added here will be added to the compInfo section of searchData
 	},
-	github: "https://github.com/REPLACE_USER/REPLACE_REPO",
-	demovideo: "https://www.youtube.com/watch?v=REPLACE_ID"
+	github: "https://github.com/lenin-12/Tourism-Explorer-HyperDart.git",
+	demovideo: "https://youtu.be/DVkbRJk5_lA"
 }
