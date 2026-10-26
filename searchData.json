@@ -1,0 +1,113 @@
+[
+  {
+    "component": "tourism-explorer",
+    "query": "Tourist attractions in NYC",
+    "entities": [
+      {
+        "word": "NYC",
+        "collectionName": "CITIES",
+        "collectionType": "HD_LOCATION",
+        "entityType": "LOCATION",
+        "entityInfo": {
+          "geo": {
+            "tz": "America/New_York",
+            "lat": 40.71427,
+            "long": -74.00597,
+            "city": "New York City",
+            "state": "New York",
+            "country": "United States",
+            "countryCode": "US"
+          }
+        },
+        "relevanceScore": 100
+      }
+    ],
+    "keyword": [],
+    "suggestedPlace": "sidebar",
+    "userLocation": {
+      "position": {
+        "coords": {
+          "latitude": 26.4631,
+          "longitude": 80.3479
+        },
+        "city": "Kanpur",
+        "countryCode": "IN"
+      },
+      "source": "ip"
+    }
+  },
+  {
+    "component": "tourism-explorer",
+    "query": "museums in Delhi",
+    "entities": [
+      {
+        "word": "Delhi",
+        "collectionName": "CITIES",
+        "collectionType": "HD_LOCATION",
+        "entityType": "LOCATION",
+        "entityInfo": {
+          "geo": {
+            "tz": "Asia/Kolkata",
+            "lat": 28.6139,
+            "long": 77.209,
+            "city": "Delhi",
+            "state": "Delhi",
+            "country": "India",
+            "countryCode": "IN"
+          }
+        },
+        "relevanceScore": 100
+      }
+    ],
+    "keyword": [],
+    "suggestedPlace": "sidebar",
+    "userLocation": {
+      "position": {
+        "coords": {
+          "latitude": 26.4631,
+          "longitude": 80.3479
+        },
+        "city": "Kanpur",
+        "countryCode": "IN"
+      },
+      "source": "ip"
+    }
+  },
+  {
+    "component": "tourism-explorer",
+    "query": "Things to do in Paris",
+    "entities": [
+      {
+        "word": "Paris",
+        "collectionName": "CITIES",
+        "collectionType": "HD_LOCATION",
+        "entityType": "LOCATION",
+        "entityInfo": {
+          "geo": {
+            "tz": "Europe/Paris",
+            "lat": 48.8566,
+            "long": 2.3522,
+            "city": "Paris",
+            "state": "Ile-de-France",
+            "country": "France",
+            "countryCode": "FR"
+          }
+        },
+        "relevanceScore": 100
+      }
+    ],
+    "keyword": [],
+    "suggestedPlace": "sidebar",
+    "userLocation": {
+      "position": {
+        "coords": {
+          "latitude": 26.4631,
+          "longitude": 80.3479
+        },
+        "city": "Kanpur",
+        "countryCode": "IN"
+      },
+      "source": "ip"
+    }
+  }
+]

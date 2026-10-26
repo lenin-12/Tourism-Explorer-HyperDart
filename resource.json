@@ -1,0 +1,95 @@
+{
+  "title": "Tourism Explorer",
+  "description": "Shows real tourist attractions near a searched place (sights, museums, temples, forts, parks), with a map, weather and a day plan. It does not handle hotels, restaurants, bookings or transport.",
+  "componentScope": {
+    "supportedIntents": [
+      {
+        "intent": "attraction-list",
+        "description": "Broad questions about what to see or do in a city or area. Needs a place; no category.",
+        "example": [
+          "things to do in Paris",
+          "tourist attractions in NYC",
+          "best places to visit in Kurukshetra",
+          "sights near Tokyo",
+          "what to see in Agra",
+          "top sightseeing spots around Rome",
+          "landmarks in Rome"
+        ]
+      },
+      {
+        "intent": "category-search",
+        "description": "Questions asking for one kind of place (museums, temples, forts, monuments, viewpoints, parks, historic sites) in a city or area.",
+        "example": [
+          "museums in Delhi",
+          "best temples in Kyoto",
+          "forts near Jaipur",
+          "parks in London",
+          "mosques in Istanbul",
+          "palaces near Udaipur",
+          "heritage sites in Hampi"
+        ]
+      }
+    ]
+  },
+  "schema": {
+    "$defs": {
+      "categories": {
+        "type": "string",
+        "enum": [
+          "museum",
+          "temple",
+          "fort",
+          "monument",
+          "viewpoint",
+          "park",
+          "historic",
+          "landmark"
+        ],
+        "description": "Kind of place the user asked for. Map synonyms: museum (museums, galleries); temple (temples, mosques, churches, shrines, gurudwaras, places of worship); fort (forts, castles, palaces); monument (monuments, memorials); viewpoint (viewpoints, lookouts); park (parks, gardens); historic (historic/heritage sites, ruins); landmark (landmarks). Omit for a broad 'things to do' request. Never use the place name itself as a category (Newcastle, Fort Worth, Park City are places)."
+      },
+      "attributes": {
+        "type": "string",
+        "description": "Extra information the user may want per place, e.g. 'description', 'distance', 'opening hours', 'directions', 'weather', 'day plan'. Use an empty array if none are requested."
+      }
+    },
+    "type": "object",
+    "description": "A request for tourist places in one location.",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "list",
+          "query"
+        ],
+        "description": "'list' for a broad attractions request (no specific kind of place), 'query' when a specific category is requested."
+      },
+      "filters": {
+        "type": "object",
+        "description": "Narrow the attractions by kind of place.",
+        "properties": {
+          "category": {
+            "$ref": "#/$defs/categories"
+          }
+        },
+        "additionalProperties": true
+      },
+      "features": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/attributes"
+        }
+      },
+      "entities": {
+        "collections": [
+          "CITIES"
+        ]
+      }
+    },
+    "required": [
+      "type",
+      "filters",
+      "features",
+      "entities"
+    ]
+  }
+}

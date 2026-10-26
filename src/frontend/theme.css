@@ -1,0 +1,76 @@
+.tx-root {
+  --bg: #edf1ef; --surface: #fff; --ink: #12302e; --muted: #5a6f6c; --line: #cfdad7;
+  --accent: #e9a23b; --accent-ink: #2b1c00; --route: #17677a;
+  container-type: inline-size; background: var(--bg); color: var(--ink);
+  font: 15px/1.5 system-ui, sans-serif; padding: 16px; border-radius: 12px;
+}
+@media all {
+  .tx-root[data-mode='dark'] { --bg: #0e1a1a; --surface: #152625; --ink: #e6efec; --muted: #9bb2ae; --line: #2a403e; --accent: #f0b454; --route: #5cc0d0; }
+  /* lightsOut: true-black variant of dark */
+  .tx-root[data-mode='lightsOut'] { --bg: #000; --surface: #0b0f0f; --ink: #e6efec; --muted: #8fa6a2; --line: #1f2f2e; --accent: #f0b454; --route: #5cc0d0; }
+}
+.tx-root h2, .tx-root h3 { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif; margin: 0 0 4px; }
+.tx-root h2 { font-size: 1.5rem; }
+.tx-muted { color: var(--muted); margin: 2px 0; }
+.tx-list { display: grid; gap: 10px; }
+.tx-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; }
+.tx-thumb { width: 96px; object-fit: cover; flex: none; }
+.tx-body { padding: 12px; min-width: 0; }
+.tx-body h3 { font-size: 1.05rem; }
+.tx-meta { color: var(--route); font-weight: 600; margin: 0 0 4px; }
+.tx-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 4px 0; }
+.tx-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.tx-btn, .tx-chip { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 6px 12px; }
+.tx-btn.tx-on, .tx-chip[aria-pressed='true'] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.tx-ghost { margin-top: 8px; }
+.tx-jump { margin-top: 8px; }
+.tx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tx-link { color: var(--route); }
+.tx-root :focus-visible { outline: 3px solid var(--route); outline-offset: 2px; }
+.tx-state { background: var(--surface); border: 1px dashed var(--line); border-radius: 10px; padding: 16px; margin-top: 12px; }
+.tx-skel { min-height: 88px; background: linear-gradient(90deg, var(--surface), var(--line), var(--surface)); background-size: 200% 100%; animation: tx-shim 1.4s linear infinite; }
+@keyframes tx-shim { to { background-position: -200% 0; } }
+.tx-weather { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 12px 0; }
+.tx-weather p { margin: 2px 0; }
+.tx-days { display: flex; gap: 6px; overflow-x: auto; padding: 6px 0; }
+.tx-chip { white-space: nowrap; padding: 3px 10px; }
+.tx-layout { display: grid; gap: 16px; margin-top: 12px; grid-template-areas: 'map' 'list' 'plan'; }
+.tx-mapwrap { grid-area: map; isolation: isolate; }
+.tx-list { grid-area: list; }
+.tx-plan { grid-area: plan; }
+.tx-plan { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; align-self: start; }
+/* Route ribbon: a transit-line of stops in visiting order */
+.tx-route { list-style: none; margin: 8px 0; padding: 0 0 0 22px; border-left: 4px solid var(--route); }
+.tx-route li { position: relative; padding: 4px 0 10px; }
+.tx-route li::before { content: ''; position: absolute; left: -31px; top: 28px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); border: 4px solid var(--route); }
+.tx-leg { display: block; font-size: 0.8rem; color: var(--muted); }
+.tx-stop { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; }
+.tx-x { border: 0; background: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+@container (min-width: 720px) {
+  .tx-layout { grid-template-columns: 1fr 340px; grid-template-areas: 'list map' 'list plan'; grid-template-rows: auto 1fr; }
+  .tx-mapwrap { position: sticky; top: 8px; align-self: start; }
+  .tx-jump { display: none; } /* the plan is already visible next to the list */
+}
+@container (max-width: 360px) { .tx-thumb { display: none; } }
+@media (prefers-reduced-motion: reduce) { .tx-skel { animation: none; } }
+
+.tx-map { height: 260px; border-radius: 10px; border: 1px solid var(--line); }
+.tx-pin { display: block; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 3px solid #12302e; /* fixed colours: they must also show on the dark map */ box-sizing: border-box; }
+.tx-pin.plan { background: #1f7a8c; border-color: #fff; box-shadow: 0 0 0 2px #1f7a8c; }
+.tx-pin.sel { width: 22px; height: 22px; margin: -3px; background: #e9a23b; border-color: #12302e; }
+.tx-selected { border-color: var(--route); box-shadow: 0 0 0 2px var(--route); }
+.tx-linkbtn { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-decoration: underline; }
+@media all {
+  .tx-root[data-mode='dark'] .leaflet-tile-pane,
+  .tx-root[data-mode='lightsOut'] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9); }
+}
+
+.tx-foot { font-size: 0.8rem; margin-top: 14px; }
+
+/* UIOptions.format overrides. Placed last so they win over the container-query rules above. */
+/* sidebar: always the compact single-column layout, even if the container happens to be wide */
+.tx-root[data-format='sidebar'] .tx-layout { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: 'map' 'list' 'plan'; }
+.tx-root[data-format='sidebar'] .tx-mapwrap { position: static; }
+.tx-root[data-format='sidebar'] .tx-jump { display: inline-block; }
+/* fullscreen: taller map */
+.tx-root[data-format='fullscreen'] .tx-map { height: 420px; }
